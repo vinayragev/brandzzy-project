@@ -28,7 +28,8 @@
     </div>
     <div class="form-group col-md-6">
       <label>password</label>
-      <input type="text" class="form-control" name="password" value="{{ $item->password }}" placeholder="password">
+      <input type="text" class="form-control" name="password" value="" placeholder="password">
+      <small>Add password for change password</small>
     </div>
     <div class="form-group col-md-6">
       <label>active</label>

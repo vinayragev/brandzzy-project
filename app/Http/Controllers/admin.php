@@ -5,12 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use DB;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Hash;
 
 class admin extends Controller
 {
     public function index(Request $request)
     {
-        return view('admin/index');
+        return view('admin/index',['request'=>$request]);
     }
 
     public function user_add(Request $request)
@@ -21,9 +22,9 @@ class admin extends Controller
             $insert['email']     = $request->post('email');
             $insert['gender']    = $request->post('gender');
             $insert['dob']       = $request->post('dob');
-            $insert['password']  = $request->post('password');
+            $insert['password']  = Hash::make($request->post('password'));
             $insert['active']    = $request->post('active');
-            $insert['role_id']      = $request->post('role_id');
+            $insert['role_id']    = $request->post('role_id');
             DB::table('users')->insert($insert);
             echo '<script>alert("User added Successfully")</script>';
             echo '<script>location.href = "/admin/user/list"</script>';
@@ -36,7 +37,10 @@ class admin extends Controller
     public function user_list(Request $request)
     {
         $data = [];
-        $data['list'] = DB::table('users')->join('role', 'users.role_id', '=', 'role.role_id')->get();
+        $data['list'] = DB::table('users')->leftjoin('role', 'users.role_id', '=', 'role.role_id')->get();
+        $data['auth_add'] = DB::table('auth')->where(["role_id"=>auth()->user()->role_id,'pathname'=>'admin/user/add'])->count();
+        $data['auth_edit'] = DB::table('auth')->where(["role_id"=>auth()->user()->role_id,'pathname'=>'admin/user/edit'])->count();
+        $data['auth_delete'] = DB::table('auth')->where(["role_id"=>auth()->user()->role_id,'pathname'=>'admin/user/delete'])->count();
         return view('admin/user/list', $data);
     }
     public function user_edit(Request $request)
@@ -47,7 +51,9 @@ class admin extends Controller
             $update['email']     = $request->post('email');
             $update['gender']    = $request->post('gender');
             $update['dob']       = $request->post('dob');
-            $update['password']  = $request->post('password');
+            if(trim($request->post('password'))!==''){
+                $update['password']  = Hash::make($request->post('password'));
+            }
             $update['active']    = $request->post('active');
             $update['role_id']   = $request->post('role_id');
             DB::table('users')->where(['id'=>$request->get('user_id')])->update($update);
@@ -90,6 +96,9 @@ class admin extends Controller
     {
         $data = [];
         $data['list'] = DB::table('role')->get();
+        $data['auth_add'] = DB::table('auth')->where(["role_id"=>auth()->user()->role_id,'pathname'=>'admin/role/add'])->count();
+        $data['auth_edit'] = DB::table('auth')->where(["role_id"=>auth()->user()->role_id,'pathname'=>'admin/role/edit'])->count();
+        $data['auth_delete'] = DB::table('auth')->where(["role_id"=>auth()->user()->role_id,'pathname'=>'admin/role/delete'])->count();
         return view('admin/role/list', $data);
     }
     public function role_edit(Request $request)
@@ -132,7 +141,7 @@ class admin extends Controller
     public function post_add(Request $request)
     {
         if ($request->method()==='POST') {
-            DB::table('post')->insert(["title"=>$request->post('title'),"text"=>$request->post('text')]);
+            DB::table('post')->insert(["title"=>$request->post('title'),"text"=>$request->post('text'),"user_id"=>auth()->user()->id]);
             echo '<script>alert("Post added Successfully")</script>';
             echo '<script>location.href = "/admin/post/list"</script>';
         }else{
@@ -143,6 +152,11 @@ class admin extends Controller
     {
         $data = [];
         $data['list'] = DB::table('post')->get();
+        $data['auth_add'] = DB::table('auth')->where(["role_id"=>auth()->user()->role_id,'pathname'=>'admin/post/add'])->count();
+        $data['auth_edit'] = DB::table('auth')->where(["role_id"=>auth()->user()->role_id,'pathname'=>'admin/post/edit'])->count();
+        $data['auth_publish'] = DB::table('auth')->where(["role_id"=>auth()->user()->role_id,'pathname'=>'admin/post/publish'])->count();
+
+        $data['auth_delete'] = DB::table('auth')->where(["role_id"=>auth()->user()->role_id,'pathname'=>'admin/post/delete'])->count();
         return view('admin/post/list', $data);
     }
     public function post_edit(Request $request)
@@ -156,6 +170,17 @@ class admin extends Controller
             $data['item'] = DB::table('post')->where(['post_id'=>$request->get('post_id')])->first();
             return view('admin/post/edit',$data);
         }
+    }
+    public function post_publish(Request $request)
+    {
+        $update = [];
+        if($request->get('value')==="true"){
+            $update['publish'] = 1;
+        }else{
+            $update['publish'] = 0;
+        }
+        print_r($update);
+        DB::table('post')->where(['post_id'=>$request->get('post_id')])->update($update);
     }
     public function post_delete(Request $request)
     {
