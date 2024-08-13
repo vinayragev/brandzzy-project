@@ -17,9 +17,9 @@
   <table class="table table-striped">
     <thead>
       <tr>
-        <td>Title</td>
-        <td>Published</td>
-        <td>action</td>
+        <th>Title</th>
+        <th>Published</th>
+        <th>action</th>
       </tr>
     </thead>
     <tbody>
@@ -52,6 +52,13 @@
       </tr>
       <?php endforeach ?>
     </tbody>
+    <tfoot>
+      <tr>
+        <th>Title</th>
+        <th>Published</th>
+        <th>action</th>
+      </tr>
+    </tfoot>
   </table>
 <?php else: ?>
   <h3>No Post are added</h3>

@@ -15,13 +15,17 @@
 
 <?php if (count($list)): ?>
   <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Role Name</th>
+        <th>Action</th>
+      </tr>
+    </thead>
     <tbody>
       <?php foreach ($list as $key => $value): ?>
       <tr>
         <td>{{$value->role_name}}</td>
         <td>
-
-
         <?php if ($auth_edit): ?>
           <a href="/admin/role/edit?role_id={{ $value->role_id }}" class="btn btn-primary">Edit</a>
         <?php endif ?>
@@ -32,6 +36,12 @@
       </tr>
       <?php endforeach ?>
     </tbody>
+    <tfoot>
+      <tr>
+        <th>Role Name</th>
+        <th>Action</th>
+      </tr>
+    </tfoot>
   </table>
 <?php else: ?>
   <h3>No roles are added</h3>

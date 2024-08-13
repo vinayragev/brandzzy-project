@@ -16,6 +16,17 @@
 
 <?php if (count($list)): ?>
   <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Full Name</th>
+        <th>Email</th>
+        <th>DOB</th>
+        <th>Gender</th>
+        <th>Role Name</th>
+        <th>Action</th>
+      </tr>
+    </thead>
     <tbody>
       <?php foreach ($list as $key => $value): ?>
       <tr>
@@ -40,6 +51,17 @@
       </tr>
       <?php endforeach ?>
     </tbody>
+    <tfoot>
+      <tr>
+        <th>#</th>
+        <th>Full Name</th>
+        <th>Email</th>
+        <th>DOB</th>
+        <th>Gender</th>
+        <th>Role Name</th>
+        <th>Action</th>
+      </tr>
+    </tfoot>
   </table>
 <?php else: ?>
   <h3>No Users are added</h3>
