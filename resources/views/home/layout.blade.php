@@ -37,8 +37,7 @@
   <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6 text-white" href="/admin">Brandzzy</a>
 
   <?php if (auth()->user()): ?>
-  {{ auth()->user()->full_name }}
-  <a href="/logout" class="btn btn-light">Log out</a>
+  <a href="/logout" class="btn btn-light">{{ auth()->user()->email }}/Log out</a>
   <?php else: ?>
   <a href="/login" class="btn btn-light">Log In</a>
   <?php endif ?>

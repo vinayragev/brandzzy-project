@@ -25,6 +25,9 @@ class home extends Controller
             if ($result) {
                 $request->session()->regenerate();
                 return redirect('/admin');
+            }else{
+                echo '<script>alert("Email and Password Not Match")</script>';
+                echo '<script>history.go(-1)</script>';
             }
         }else{
             return view('home.sign.login');
