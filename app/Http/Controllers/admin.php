@@ -106,7 +106,7 @@ class admin extends Controller
         if ($request->method()==='POST') {
             DB::table('role')->where(['role_id'=>$request->get('role_id')])->update(["role_name"=>$request->post('role_name')]);
             $role_permission = explode(',', $request->post('role_permission'));
-            DB::table('auth')->whereNotIn('pathname',$role_permission)->delete();
+            DB::table('auth')->whereNotIn('pathname',$role_permission)->where(['role_id'=>$request->get('role_id')])->delete();
             $insert = [];
             for ($i=0; $i < count($role_permission); $i++) { 
                 if(DB::table('auth')->where(['pathname'=>$role_permission[$i],'role_id'=>$request->get('role_id')])->count()){
